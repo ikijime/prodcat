@@ -1,0 +1,18 @@
+package attributeView
+
+import "prodcat/ent"
+import "strconv"
+
+templ AttributeRow(attribute *ent.Attribute) {
+<div id={ "attributeRow" + strconv.Itoa(attribute.ID) } class="table-row w-full h-8">
+	<div class="table-cell w-10">{ strconv.Itoa(attribute.ID) }</div>
+	<div class="table-cell">
+		<a hx-target="#content" href={templ.URL("/attributes/" + strconv.Itoa(attribute.ID))}>{ attribute.Name }</a>
+	</div>
+	<div class="table-cell md:w-auto text-sm text-italic">{ attribute.Description }</div>
+	<div class="table-cell md:w-24 text-sm">{ attribute.Type }</div>
+	<div></div>
+</div>
+}
+
+// _="on click toggle @disabled on .btn-change"

@@ -1,0 +1,25 @@
+package attributeView
+
+import "strconv"
+import "prodcat/dto"
+
+templ VariantRow(attrId int, v dto.AttributeVariantDTO) {
+	<div class="grid grid-cols-12" id={ "variantRow" + strconv.Itoa(v.ID) }>
+		<div class="text-sm col-span-1"><i>{ strconv.Itoa(v.ID) }</i></div>
+		<div class="col-span-7">{v.Value}</div>
+		<div class="col-span-1"></div>
+		<div class="col-span-1">
+			<button
+			_="on click toggle @disabled on .btn-change"
+			class="btn-primary-sm bg-green-700 hover:bg-green-500 btn-change"
+			hx-get={ "/attributes/" + strconv.Itoa(attrId) + "/variants/" + strconv.Itoa(v.ID) + "/edit" }
+			hx-target={ "#variantRow" + strconv.Itoa(v.ID)}
+			hx-swap="outerHTML transition:true"
+			>Change</button>
+		</div>
+		<div class="col-span-1"></div>
+		<div class="col-span-1"></div>
+	</div>
+}
+
+// _="on click toggle @disabled on .btn-change"

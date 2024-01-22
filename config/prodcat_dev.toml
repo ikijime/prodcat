@@ -1,0 +1,30 @@
+###############################################################################
+# Database configuration
+
+# Connection string is in Go pq driver format:
+# host=<host> port=<port> user=<databaseUser> password=<databaseUserPassword> dbname=<databaseName>
+[app]
+TZ = "Asia/Tashkent"
+
+[database]
+
+connection_string = "host=localhost port=5432 user=golang password=test_password dbname=prodcat sslmode=disable"
+connection_string_full = "postgres://golang:test_password@localhost:5432/prodcat?sslmode=disable"
+max_idle_connections = 5
+max_open_connections = 20
+connection_max_lifetime = "60s"
+driver_name = "postgres"
+###############################################################################
+# HTTP server configuration
+
+[http]
+
+server_address = ":8080"
+###############################################################################
+
+[jwt]
+token_secret = "be3f622057988c8ccad344b0ccde1bfd27250fa4ffdbfcb17934efa0fad3ea91"
+
+[roles]
+"admin" = ["admin", "user"]
+"user" = ["user"]

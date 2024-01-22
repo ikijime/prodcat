@@ -1,0 +1,37 @@
+.btn-change {}
+
+.table-row {
+  background-color: #1E202F;
+}
+
+.table-row:nth-child(even) {
+  background-color: #181a26;
+}
+
+.table-cell {
+  border: 1px solid #181a26;
+  text-align: left;
+  padding: 4px;
+  display: table-cell; 
+}
+
+.table-cell-h {
+  text-align: left;
+  padding: 4px;
+  display: table-cell; 
+}
+
+.card-row{
+    background-color: #181a26;
+  }
+
+.card-row:nth-child(even) {
+    background-color: #181a26;
+  }
+
+.card-cell {
+    border: 1px solid #181a26;
+    text-align: left;
+    padding: 4px;
+    display: table-cell; 
+  }

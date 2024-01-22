@@ -1,0 +1,16 @@
+package layout
+
+templ AuthMenu(IsLoggedIn bool, IsAdmin bool, username string) {
+		<div id="auth-menu" class="w-1/3">
+			if IsLoggedIn {
+				if IsAdmin {
+					<a class="px-2 active:bg-fuchsia-600" hx-push-url="true" href="/admin">Admin panel</a>
+				}
+				<a class="px-2 active:bg-fuchsia-600 focus:bg-fuchsia-200" href="/logout">Logout</a>
+				<i class="font-light ml-2">{ username }</i>
+			} else {
+				<a class="px-2 active:bg-fuchsia-600 focus:bg-fuchsia-200" href="/login">Login</a>
+				<a class="px-2 active:bg-fuchsia-600 focus:bg-fuchsia-200" href="/register">Register</a>
+			}
+		</div>
+}

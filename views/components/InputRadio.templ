@@ -1,0 +1,58 @@
+package components
+
+import "strconv"
+
+	func isDisabled(isTrue bool) string {
+    if isTrue {
+        return "true"
+    }
+    	return "false"
+	}
+
+
+templ InputRadio(owner string, name string, err error,values []string, def string, disabled bool) {
+	<style>
+	.radio[disabled] {
+		background-color: #FFFFFF;
+	}
+	</style>
+	<p><span class="font-light">Value type:</span></p>
+	<div class="grid grid-cols-[2%_98%]">
+		<div
+			if err != nil {
+				class="col-span-1 py-1 bg-red-700"
+			} else {
+				class="col-span-1 py-1 bg-slate-600"
+			}
+		></div>
+		<div
+			id={ owner + "-field" }
+			if err != nil {
+				class="inputError col-span-1 w-full text-blonde font-medium p-1 bg-gray-violet0 border-solid border-l-near-black"
+			} else {
+				class="col-span-1 w-full text-blonde font-medium p-1 bg-gray-violet0 border-solid border-l-near-black"
+			}
+		>
+			for k, value := range values {
+				if value == def {
+					<input type="radio" id={ value + strconv.Itoa(k) } placeholder={value} name={name} value={value} checked
+					if disabled {
+						disabled
+					}
+					 />
+				} else {
+					<input type="radio" id={ value + strconv.Itoa(k) } placeholder={value} name={name} value={value}
+					if disabled {
+						disabled
+					}
+					 />
+				}
+
+				<label for={ value + strconv.Itoa(k) }>{ value }&nbsp</label>
+			}
+		</div>
+	</div>
+	if err != nil {
+		<p class="mt-1 ml-1 text-sm text-red-600 dark:text-red-500"><span class="font-medium">Error: </span>{ err.Error() }</p>
+	}
+}

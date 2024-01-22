@@ -1,0 +1,79 @@
+package layout
+
+import "github.com/gin-gonic/gin"
+import "prodcat/views/components"
+import "prodcat/ent"
+
+func GetUserStatus(c *gin.Context) (bool, bool, string) {
+	IsLoggedInS, ok := c.Get("isLoggedIn")
+	if !ok {
+		return false, false, ""
+	}
+
+	IsLoggedIn, ok := IsLoggedInS.(bool)
+	if !ok {
+		return false, false, ""
+	}
+
+	IsAdminS, ok := c.Get("isAdmin")
+	if !ok {
+		return IsLoggedIn, false, ""
+	}
+
+	IsAdmin, ok := IsAdminS.(bool)
+	if !ok {
+		return IsLoggedIn, false, ""
+	}
+
+	user, _ := c.Get("user")
+	userInfered, ok := user.(*ent.User)
+	if !ok {
+		return true, IsAdmin, ""
+	}
+	return true, IsAdmin, userInfered.Login
+}
+
+templ Base(c *gin.Context) {
+	<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			<meta charset="UTF-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+			<title>PRODCAT</title>
+			<link rel="stylesheet" href="/static/css/toastify.css"/>
+			<link rel="stylesheet" href="/static/css/output.css"/>
+			<link rel="stylesheet" href="/static/css/additional.css"/>
+			<script src="/static/js/htmx.js"></script>
+
+			// DEV
+			<script src="https://cdn.tailwindcss.com"></script>
+			<script src="/static/js/disable-element.js"></script>
+			<script src="/static/js/utils.js"></script>
+ 			// <script src="/static/js/hyperscript.js"></script>
+			<script src="/static/js/toastify.js" type="application/javascript"></script>
+			<script src="/static/js/notification-system.js"></script>
+		</head>
+		<body
+			style="height: 100vh; background: radial-gradient(circle, rgb(28 29 42) 0%, rgb(18 21 29) 39%, rgb(16 19 32) 100%);"
+			class="text-white">
+			<header class="sticky w-full top-0 z-50 flex flex-wrap items-center justify-between bg-white px-4 py-3 shadow-md shadow-neutral-900/10 transition duration-500 shadow-none sm:px-6 lg:px-8 bg-neutral-900/95 backdrop-blur [@supports(backdrop-filter:blur(0))]:bg-neutral-900/75">
+			<div class="relative flex flex-grow basis-0 items-center">
+				<a href="/" class="text-lg md:mr-12 font-medium text-white mx-2">Home</a>
+				@SearchMenu(GetUserStatus(c))
+				@AuthMenu(GetUserStatus(c))
+				</div>
+			</header>
+			<main hx-boost="true" id="main-area">
+				<div class="relative justify-center">
+					{ children... }
+				</div>
+			</main>
+
+        // SPINNER
+        <div class="w-12 load-indicator items-center fixed bottom-5 left-5">
+			<img class="htmx-indicator shadow-sm" id="indicator" src="/static/assets/oval.svg"/>
+		</div>
+		@components.FieldDataSaver()
+		</body>
+	</html>
+}

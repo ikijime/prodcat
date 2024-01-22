@@ -1,0 +1,9 @@
+/resources
+/vendor
+/tmp
+/bin
+.air.toml
+.air.toml.back
+node_modules
+.vscode
+config/prodcat_prod.toml

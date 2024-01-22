@@ -1,0 +1,26 @@
+package attributeView
+
+import "prodcat/views/layout"
+import "strconv"
+import "prodcat/dto"
+
+templ Attribute(dto dto.AttributeWithVariantsDTO) {
+  @layout.MainMenu("attribute") {
+    <div id="attributePage">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="bg-black/20 mt-4 p-8">
+            <button class="btn-primary-sm bg-green-700 hover:bg-green-500"><a hx-target="#content" href={templ.URL("/attributes/" + strconv.Itoa(dto.A.ID) + "/edit")}>edit</a></button>
+            <p>id: { strconv.Itoa(dto.A.ID) }</p>
+            <p>Name: { dto.A.Name }</p>
+            <p>Description: { dto.A.Description }</p>
+            <div class="p-2">
+                Variants: <br/>
+                for _, v := range dto.V  {
+                  <i class="text-sm">{ strconv.Itoa(v.ID) }</i> { v.Value }<br/>
+                }
+            </div>
+          </div>
+      </div>
+    </div>
+  }
+}

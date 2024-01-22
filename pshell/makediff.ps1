@@ -1,0 +1,1 @@
+atlas-windows-amd64-latest.exe migrate diff "migration4" --dir "file://ent/migrate/migrations" --to "ent://ent/schema" --dev-url "postgres://golang:test_password@localhost:5432/prodcat?search_path=public&sslmode=disable" 

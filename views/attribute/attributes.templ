@@ -1,0 +1,27 @@
+package attributeView
+
+import "prodcat/views/layout"
+import "prodcat/ent"
+
+templ Attributes(attributes []*ent.Attribute) {
+    @layout.MainMenu("attributes") {
+    <div class="bg-blue-600 font-light p-1">
+      <a class="ml-2" hx-target="#content" href="/attributes/add">Add</a>
+      <div class="float-right mx-4">
+        <a class="ml-2" hx-target="#content" href="/attributes">All</a>
+        <a class="ml-2" hx-target="#content" href="/attributes?type=bool">Boolean</a>
+        <a class="ml-2" hx-target="#content" href="/attributes?type=string">String</a>
+        <a class="ml-2" hx-target="#content" href="/attributes?type=numeric">Numeric</a>
+      </div>
+    </div>
+    <div id="searchable">
+      <div id="attributesList" class="table w-screen relative">
+          for _, attribute := range attributes {
+            @AttributeRow(attribute)
+          }
+      </div>
+    </div>
+    }
+}
+
+

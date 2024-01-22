@@ -1,0 +1,50 @@
+package attributeView
+
+import "prodcat/views/layout"
+import "prodcat/views/components"
+import "prodcat/dto"
+import "strconv"
+import "prodcat/ent/schema"
+
+templ AttributeEdit(dtoAttr dto.AttributeWithVariantsDTO) {
+	@layout.MainMenu("attribute") {
+		<div id="attributeEditPage">
+			<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+				<div class="bg-black/20 mt-4 p-8">
+					<form
+						id="editAttributeForm"
+						hx-post="/attributes"
+						hx-swap="innerHTML transition:true"
+						hx-target="#content"
+					>
+						<p>ID: { strconv.Itoa(dtoAttr.A.ID) }</p>
+						<input type="hidden" name="attr_id" value={ strconv.Itoa(dtoAttr.A.ID) }/>
+						@components.InputField("attribute_name","name", "name", dtoAttr.A.NameErr, dtoAttr.A.Name)
+						@components.InputRadio("attribute_type","type", dtoAttr.A.TypeErr, schema.AttrTypes, dtoAttr.A.Type, true)
+						@components.InputTextarea("attribute_desc","description", dtoAttr.A.Description, nil)
+						<br/>
+						<button
+							type="submit"
+							hx-ext="disable-element"
+							hx-disable-element="self"
+							class="form-submit-btn mx-8 mb-4 px-2 min-w-28 min-h-8 lg:w-1/  bg-indigo-700 focus:bg-indigo-400  text-base font-semibold leading-6 text-white shadow-base hover:bg-indigo-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+						>
+							Submit
+						</button>
+					</form>
+
+					<div>
+						Variants: 
+						<br/>
+						for _, v := range dtoAttr.V {
+							@VariantRow(dtoAttr.A.ID, v)
+						}
+					</div>
+					<div>
+						@VariantAddRow(dtoAttr.A.ID, "")
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+}

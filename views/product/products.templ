@@ -1,0 +1,24 @@
+package productView
+
+import "prodcat/views/layout"
+import "prodcat/ent"
+
+func switchMode(mode string) string {
+	switch mode {
+		case "cards": return "rows"
+		case "rows": return "cards"
+		default:  return ""
+	}
+}
+
+templ Products(products []*ent.Product, viewMode string) {
+		@layout.MainMenu("products") {
+		<div class="bg-blue-600 font-light p-1">
+			<a class="ml-2" hx-target="#content" href="/products/add">Add</a>
+			<div class="float-right mx-4">
+				<a hx-target="#content" href={templ.URL("/products?view=" + switchMode(viewMode)) }>{ switchMode(viewMode) }</a>
+			</div>
+		</div>
+		@ProductsList(products, viewMode)
+	}
+}

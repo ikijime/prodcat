@@ -1,0 +1,57 @@
+package attributeView
+
+import "strconv"
+import "prodcat/dto"
+
+//  #oldUserRow:delete     transition:true
+templ AttributeVariantEdit(attrId int, dtoVar dto.AttributeVariantDTO) {
+	<form
+		id="editAttributeValueForm"
+		hx-put={ "/attributes/" + strconv.Itoa(attrId) + "/variants" }
+		hx-target={ "#variantRow" + strconv.Itoa(dtoVar.ID) }
+		hx-swap="innerHTML transition:true"
+	></form>
+	<form
+		id="deleteAttributeValueForm"
+		hx-delete={ "/attributes/" + strconv.Itoa(attrId) + "/variants/" + strconv.Itoa(dtoVar.ID) }
+		hx-target={ "#variantRow" + strconv.Itoa(dtoVar.ID) }
+		hx-swap="delete">
+	</form>
+
+	<div class="grid grid-cols-12" id={ "variantRow" + strconv.Itoa(dtoVar.ID) }>
+		<div class="text-sm col-span-1"><i>{ strconv.Itoa(dtoVar.ID) }</i></div>
+		<div class="col-span-6">
+			<input type="hidden" form="editAttributeValueForm" value={ strconv.Itoa(attrId) } name="attr_id"/>
+			<input type="hidden" form="editAttributeValueForm" value={ strconv.Itoa(dtoVar.ID) } name="var_id"/>
+			<input type="hidden" form="editAttributeValueForm" value={ dtoVar.Type } name="type"/>
+			<input
+				form="editAttributeValueForm"
+				value={ dtoVar.Value }
+				name="value"
+				minlength="2"
+				if dtoVar.ValueErr != nil {
+					class="inputError col-span-1 w-full text-blonde font-medium p-1 bg-gray-violet0 border-solid border-l-near-black"
+				} else {
+					class="col-span-1  bg-transparent w-full text-blonde font-medium p-1 border-solid border-l-near-black"
+				}
+			/>
+			if dtoVar.ValueErr != nil {
+				<p class="mt-1 ml-1 text-sm text-red-600 dark:text-red-500"><span class="font-medium">Error: </span>{ dtoVar.ValueErr.Error() }</p>
+			}
+		</div>
+		<div class="col-span-2">{dtoVar.Type}</div>
+		<div class="col-span-1">
+			<button
+				form="editAttributeValueForm"
+				type="submit"
+				class="btn-primary-sm bg-green-700 hover:bg-green-500"
+			>Submit</button>
+		</div>
+		<div class="col-span-1">
+			<button
+				form="deleteAttributeValueForm"
+				class="btn-primary-sm bg-red-700 hover:bg-red-500"
+			>Delete</button>
+		</div>
+	</div>
+}

@@ -1,0 +1,22 @@
+package layout
+
+templ MainMenu(currentPage string) {
+	<div id="content">
+		<div class="w-full bg-blue-900/90">
+			<a if (currentPage == "products") { 
+				class="underline px-2"
+			} class="px-2" hx-target="#content" href="/products">Products</a>
+
+			<a if (currentPage == "attributes") { 
+				class="underline px-2"
+			} class="px-2" hx-target="#content" href="/attributes">Attributes</a>
+
+			<a if (currentPage == "brands") { 
+				class="underline px-2"
+			} class="px-2" hx-target="#content" href="/brands">Brands</a>
+		</div>
+		<div>
+			{ children... }
+		</div>
+	</div>
+}

@@ -1,0 +1,39 @@
+package components
+
+script saveFieldData() {
+	var fields = [
+		"username", "password", "password_confirm", "first_name", "last_name", "email", "phonenumber",
+	
+	];
+	htmx.onLoad(function(elt) {
+		var classToListen = "form-submit-btn";
+		var classBtn = document.getElementsByClassName(classToListen)[0];
+
+		if (classBtn !== undefined || classBtn !== null) {
+			fields.flatMap((x) => {
+				var field = document.getElementById(x);
+				if (field) {
+					var fieldVal = sessionStorage.getItem(x);
+					if (fieldVal) {
+						field.value = fieldVal
+					};
+				}
+
+			})
+
+			if (classBtn) {
+			htmx.on(classBtn, "click", function(evt) {
+				fields.flatMap((x) => {
+					var field = document.getElementById(x);
+					if (field) {
+						sessionStorage.setItem(x, field.value);
+					}
+				})
+			});
+		}
+	}})
+}
+
+templ FieldDataSaver() {
+    @saveFieldData()
+}

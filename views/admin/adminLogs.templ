@@ -1,0 +1,9 @@
+package adminViews
+
+import "prodcat/views/layout"
+import "github.com/gin-gonic/gin"
+
+templ AdminLogs(c *gin.Context) {
+	@layout.AdminMenu(c)
+	<div class="p-2 bg-gray-violet2/50">There will be domain logs like who edited what and when. And maybe some important infrastructure changes.</div>
+}

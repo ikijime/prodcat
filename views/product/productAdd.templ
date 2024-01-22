@@ -1,0 +1,35 @@
+package productView
+
+import "prodcat/views/components"
+import "prodcat/views/layout"
+import "prodcat/dto"
+
+templ ProductAdd(productDTO *dto.ProductDTO) {
+	@layout.MainMenu("add-product") {
+	<form
+		id="addProductForm"
+		hx-post="/products"
+		hx-swap="innerHTML transition:true"
+		hx-target="#content"
+		hx-indicator="#indicator"
+		hx-encoding="multipart/form-data">
+		<div class="grid grid-cols-1 gap-6 pt-4 px-6 py-4 sm:grid-cols-2 bg-gray-violet2/50">
+			@components.InputField("product_code","code", "code", productDTO.CodeErr, productDTO.Code)
+			@components.InputField("product_barcode","barcode", "barcode", productDTO.BarcodeErr, productDTO.Barcode)
+			@components.InputField("product_name","name", "name", productDTO.NameErr, productDTO.Name)
+			@components.InputTextarea("product_description","description", "description", nil)
+			<div class="mt-4">
+				@components.ImageUpload(productDTO.Image)
+			</div>
+		</div>
+		<br/>
+		<button
+			type="submit"
+			hx-ext="disable-element"
+			hx-disable-element="self"
+			class="form-submit-btn mx-8 mb-4 px-2 min-w-28 min-h-8 lg:w-1/  bg-indigo-700 focus:bg-indigo-400  text-base font-semibold leading-6 text-white shadow-base hover:bg-indigo-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+			Add
+		</button>
+	</form>
+	}
+}

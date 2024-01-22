@@ -1,0 +1,12 @@
+Keyboard,Mechanical keyboard with linear switches,1,000001,string,Switches,Type of keyboard switch,Cherry MX Red
+@,@,@,@,string,Keytype,Type of keyboard,Mechanical
+@,@,@,@,numeric,Keys,Number of keys,72
+@,@,@,@,string,Connection type,Type of connection,wired
+@,@,@,@,bool,Low-profile,Keyboard with shorder key height, false
+@,@,@,@,bool,Backlight,Backlight lighting,true
+SecondKeyboard,Mechanical keyboard with linear switches,2,000002,string,Switches,Type of keyboard switch,Cherry MX Blue
+@,@,@,@,string,Keytype,Type of keyboard,Mechanical
+@,@,@,@,bool,Backlight,Backlight lighting,false
+@,@,@,@,bool,Low-profile,Keyboard with shorder key height, false
+@,@,@,@,numeric,Keys,Number of keys,83
+@,@,@,@,string,Connection type,Type of connection,wired + wireless

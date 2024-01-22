@@ -1,0 +1,16 @@
+package brandView
+
+import "github.com/gin-gonic/gin"
+import "prodcat/ent"
+import "prodcat/views/layout"
+
+templ Brands(c *gin.Context, brands []*ent.Brand, fallback bool) {
+  @layout.MainMenu("brands")
+  <div id="brandList" class="table w-screen relative">
+    Brands/Manufacturers
+    but where is brands
+    for _, brand := range brands {
+      Brand name: { brand.Name }
+    }
+  </div>
+}

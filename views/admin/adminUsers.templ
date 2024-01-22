@@ -1,0 +1,58 @@
+package adminViews
+
+import "github.com/gin-gonic/gin"
+import "prodcat/ent"
+import "prodcat/views/components"
+import "time"
+import "prodcat/views/layout"
+
+func formatTime(t time.Time) string {
+	if t.IsZero() {
+		return ""
+	}
+	return t.Format("01-02-2006 15:04:05")
+}
+
+templ AdminUsers(c *gin.Context, users []*ent.User) {
+	@layout.AdminMenu(c) {
+<style>
+	.btn-change {}
+
+	.table-row {
+		background-color: #1E202F;
+	}
+
+	.table-row:nth-child(even) {
+	background-color: #181a26;
+	}
+
+	.table-cell {
+	border: 1px solid #181a26;
+	text-align: left;
+	padding-left: 4px;
+	display: table-cell; 
+	}
+
+	.table-cell-h {
+	text-align: left;
+	padding: 4px;
+	display: table-cell; 
+	}
+</style>
+<div id="adminUserList" class="table w-screen shadow-md">
+	<div class="table-header-group bg-firebrick font-semibold shadow-none">
+		<div class="table-cell-h text-sm w-10">ID</div>
+		<div class="table-cell-h text-sm">First name</div>
+		<div class="table-cell-h text-sm">Last name</div>
+		<div class="table-cell-h text-sm">Phone</div>
+		<div class="table-cell-h text-sm">Email</div>
+		<div class="table-cell-h text-sm">Role</div>
+		<div class="table-cell-h text-sm w-20"></div>
+		<div class="table-cell-h text-sm w-20"></div>
+	</div>
+	for _, user := range users {
+		@components.UserRow(c, user)
+	}
+</div>
+}
+}

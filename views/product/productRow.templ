@@ -1,0 +1,23 @@
+package productView
+
+import "prodcat/ent"
+import "strconv"
+
+templ ProductRow(product *ent.Product) {
+<div id={ "prodRow" + strconv.Itoa(product.ID) } class="table-row w-full h-8">
+	<div class="table-cell w-10">{ strconv.Itoa(product.ID) }</div>
+	<div class="table-cell">{ product.Name }</div>
+	<div class="table-cell md:w-auto text-sm text-italic">{ product.Description }</div>
+	<div class="table-cell w-14">
+		<a href={templ.URL("/products/" + strconv.Itoa(product.ID))}>
+		<button 
+			_="on click toggle @disabled on .btn-change"
+			class="btn-primary bg-blue-700 hover:bg-blue-500 btn-change">
+			View
+		</button>
+		</a>
+	</div>
+</div>
+}
+
+				// _="on click toggle @disabled on .btn-change"

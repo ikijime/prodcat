@@ -1,0 +1,28 @@
+package components
+
+import "github.com/gin-gonic/gin"
+import "prodcat/ent"
+import "strconv"
+
+templ UserRow(c *gin.Context, user *ent.User) {
+<div id={ "userRow" + strconv.Itoa(user.ID) } class="table-row h-8" hx-target="this" hx-swap="outerHTML">
+	<div class="table-cell">{ strconv.Itoa(user.ID) }</div>
+	<div class="table-cell">{ user.FirstName }</div>
+	<div class="table-cell">{ user.LastName }</div>
+	<div class="table-cell">{ user.Phonenumber }</div>
+	<div class="table-cell">{ user.Email }</div>
+	<div class="table-cell">{ user.Role }</div>
+	<div class="table-cell w-20">
+		<button
+			_="on click toggle @disabled on .btn-change"
+			class="btn-primary bg-green-700 hover:bg-green-500 btn-change"
+			hx-get={ "/admin/users/" + strconv.Itoa(user.ID) + "/edit" }
+		>
+			Change
+		</button>
+	</div>
+	<div class="table-cell w-20" id="testButt"></div>
+</div>
+}
+
+				// _="on click toggle @disabled on .btn-change"

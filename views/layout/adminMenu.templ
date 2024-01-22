@@ -1,0 +1,15 @@
+package layout
+
+import "github.com/gin-gonic/gin"
+
+templ AdminMenu(c *gin.Context) {
+	@Base(c) {
+	<div class="w-full p-1 bg-red-900/90">
+		<a class="px-2" href="/admin/users">Users</a>
+		<a class="px-2" href="/admin/logs">Logs</a>
+	</div>
+	<div>
+		{ children... }
+	</div>
+	}
+}

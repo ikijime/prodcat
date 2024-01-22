@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer base {
+    a {
+      @apply hover:underline visited:underline text-slate-100
+    };
+
+    .btn-primary {
+      @apply py-1 px-2 text-white font-semibold rounded-sm shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75;
+    };
+
+    .btn-primary-sm {
+      @apply  px-2 text-white text-sm rounded-sm shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75;
+    };
+
+    th {
+      @apply px-1
+    };
+    .login-inp {
+      @apply border-0 p-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6;
+    };
+    .inputError {
+      @apply bg-red-50 border border-red-500 text-red-900 placeholder-red-700 focus:ring-red-500 focus:border-red-500 dark:bg-red-100 dark:border-red-400
+    };
+  }

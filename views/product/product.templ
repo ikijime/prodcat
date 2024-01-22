@@ -1,0 +1,74 @@
+package productView
+
+import "prodcat/ent"
+import "strconv"
+import "prodcat/dto"
+import "prodcat/views/layout"
+
+// maybe all views must accept only dto's, not sure for now
+templ Product(product *ent.Product, attributes dto.AttributeCollection) {
+  @layout.MainMenu("product") {
+    <div id="productPage">
+        <div class="bg-gray-100 dark:bg-gray-800/20 py-8">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div class="flex flex-col md:flex-row -mx-4">
+                    <div class="md:flex-1 px-4">
+                        <div class="h-[460px] rounded-lg bg-gray-300 dark:bg-gray-700 mb-4">
+                          <img class="w-full h-full object-cover" src="https://cdn.pixabay.com/photo/2020/05/22/17/53/mockup-5206355_960_720.jpg" alt="Product Image"></img>
+                        </div>
+                        <div class="flex -mx-2 mb-4">
+                          <div class="w-1/4 px-2">
+                                // <button class="w-full bg-gray-900 dark:bg-gray-600 text-white py-2 px-4 rounded-full font-bold hover:bg-gray-800 dark:hover:bg-gray-700">Add to Cart</button>
+                          </div>
+                          <div class="w-1/4 px-2"></div>
+                          <div class="w-1/4 px-2">
+                                <button class="w-full dark:bg-green-800 hover:bg-green-600 text-white py-2 px-2">Add attribute</button>
+                          </div>
+                          <div class="w-1/4 px-2">
+                            <a hx-target="#content" href={templ.URL("/products/" + strconv.Itoa(product.ID)) + "/edit"}>
+                            <button class="w-full dark:bg-green-700 hover:bg-green-600 text-white py-2 px-2">Edit</button>
+                            </a>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="md:flex-1 px-4">
+                        <h2 class="text-2xl dark:text-white mb-2">
+                          { product.Name }</h2>
+                          <p class="text-sm my-2">
+                          { product.Description }
+                          </p>
+                        <div class="flex mb-4">
+                          <div>
+                                <span class="">Code:</span>
+                                <span class="mr-2">{ strconv.Itoa(product.Code) }</span>
+                          </div>
+                          <div class="mr-4">
+                                <span class="">Barcode: </span>
+                                <span class="mr-2">{ product.Barcode }</span>
+                          </div>
+                        </div>
+                        <div>
+                          <span>Attributes:</span>
+                          <div class="bg-gray-700/70 p-2">
+                              for _, attribute := range attributes.BoolAttrs  {
+                                { attribute.Name } : { attribute.Value }<br/>
+                              }
+                          </div>
+                          <div class="bg-gray-700/60 p-2">
+                              for _, attribute := range attributes.StringAttrs  {
+                                { attribute.Name } : { attribute.Value }<br/>
+                              }
+                          </div>
+                          <div class="bg-gray-700/40 p-2">
+                              for _, attribute := range attributes.NumAttrs  {
+                                { attribute.Name } : { attribute.Value }<br/>
+                              }
+                          </div>
+                        </div>
+                    </div>
+              </div>
+            </div>
+        </div>
+      </div>
+    }
+}

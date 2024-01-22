@@ -1,0 +1,10 @@
+package components
+
+import "github.com/gin-gonic/gin"
+
+templ Roles(c *gin.Context, roles []string) {
+	for _, role := range roles {
+		<option class="mx-2 text-lg" value={ role }>{ role }</option>
+	}
+	<option class="mx-2 text-lg" value="test">test</option>
+}

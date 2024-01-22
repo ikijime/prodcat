@@ -1,0 +1,40 @@
+package views
+
+import "prodcat/views/layout"
+import "prodcat/views/components"
+import "github.com/gin-gonic/gin"
+import "prodcat/ent/schema"
+
+templ Login(c *gin.Context, userErrors *schema.UserErrors) {
+@layout.Base(c) {
+	<div id="login-form" class="mx-auto mt-4 w-full md:w-[400px]">
+		<div class="m-auto">
+			<div class="shadow-2xl border-slate-700 border-2 m-auto flex items-center justify-center p-2 lg:px-4 bg-gray-violet2/50">
+				<form
+					hx-post="/login"
+					hx-swap="innerHTML transition:true"
+					hx-target="#login-form"
+					hx-select="#login-form"
+					hx-indicator="#indicator" 
+					class="w-full mx-4 space-y-2"
+				>
+					<fieldset>
+						@components.InputField("username","username", "Userlogin", userErrors.UsernameError, "")
+						@components.PasswordInputField("password", "password", "Password", userErrors.PasswordError)
+					</fieldset>
+					<div class="flex flex-col items-center">
+						<button
+							type="submit"
+							hx-ext="disable-element" hx-disable-element="self"
+							class="form-submit-btn flex shadow-sm flex-col items-center my-4 py-2 px-2 min-w-24 bg-indigo-600/80 focus:bg-indigo-400 text-sm font-semibold leading-6 hover:bg-indigo-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+							Login
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	}
+}
+						// hx-ext="disable-element"
+						// hx-disable-element="self"

@@ -1,0 +1,59 @@
+package components
+
+import "github.com/gin-gonic/gin"
+import "prodcat/ent"
+import "strconv"
+
+//  #oldUserRow:delete     transition:true
+templ UserEdit(c *gin.Context, user *ent.User) {
+	<script>
+	document.querySelector('input').addEventListener('input', function() {
+		this.style.width = this.value.length + 'ch'
+	})
+	</script>
+	<form
+		id="rowForm"
+		style="display:none; visibility:hidden"
+		hx-put={ "/admin/users/" + strconv.Itoa(user.ID) }
+		hx-indicator="#indicator"
+		hx-target="this"
+		hx-swap="delete"
+		hx-select-oob={ "userRow" + strconv.Itoa(user.ID) }
+	></form>
+	<div id={ "userRow" + strconv.Itoa(user.ID) } class="table-row h-8" hx-swap="outerHTML">
+		<div class="table-cell w-10">{ strconv.Itoa(user.ID) }</div>
+		<input class="hidden" form="rowForm" type="number" name="id" value={ strconv.Itoa(user.ID) }/>
+		<div class="table-cell">
+			<input class="peer p-0 bg-gray-violet0 w-full sm:w-9/12 inline-block" form="rowForm" type="text" name="first_name" value={ user.FirstName }/>
+		</div>
+		<div class="table-cell">
+			<input class="peer p-0 bg-gray-violet0 w-full sm:w-10/12" form="rowForm" type="text" name="last_name" value={ user.LastName }/>
+		</div>
+		<div class="table-cell">
+			<input class="peer p-0 bg-gray-violet0 w-full sm:w-9/12" form="rowForm" type="text" name="phonenumber" value={ user.Phonenumber }/>
+		</div>
+		<div class="table-cell">
+			<input class="peer p-0 bg-gray-violet0 w-full sm:w-10/12" form="rowForm" type="email" name="email" value={ user.Email }/>
+		</div>
+		<div class="table-cell">
+			<div hx-get="/admin/roles" hx-trigger="click once" hx-target="#role-select" hx-swap="innerHTML">
+				<select form="rowForm" class="bg-gray-violet0" id="role-select" name="role">
+					<option class="bg-gray-violet0 p-0" value={ user.Role }>{ user.Role }</option>
+				</select>
+			</div>
+		</div>
+		<div class="table-cell w-20">
+			<button
+				form="rowForm"
+				type="submit"
+				class="btn-primary bg-green-700 hover:bg-green-500"
+			>Submit</button>
+		</div>
+		<div class="table-cell w-20">
+			<button
+			class="btn-primary bg-red-700 hover:bg-red-500"
+			_="on click toggle @disabled on .btn-change"
+			hx-target={ "#userRow" + strconv.Itoa(user.ID) } hx-swap="outerHTML" hx-get={ "/admin/users/" + strconv.Itoa(user.ID) }>Exit</button>
+		</div>
+	</div>
+}

@@ -1,0 +1,33 @@
+package productView
+
+import "prodcat/views/layout"
+import "prodcat/dto"
+import "prodcat/views/components"
+import "strconv"
+
+templ ProductEdit(dto dto.ProductDTO) {
+	@layout.MainMenu("product") {
+		<div id="productEditPage" class="ml-4 max-w-lg">
+			<form
+				id="editProductForm"
+				hx-patch={"/products/" + strconv.Itoa(dto.ID) }
+				hx-swap="innerHTML transition:true"
+				hx-target="#content"
+			>
+        <input type="hidden" name="product_id" value={ strconv.Itoa(dto.ID) }/>
+				@components.InputField("product_name", "name", "name", dto.NameErr, dto.Name)
+				@components.InputTextarea("product_desc", "description", dto.Description, dto.DescriptionErr)
+				@components.InputField("product_code", "code", "code", dto.CodeErr, dto.Code)
+				@components.InputField("product_bcode", "barcode", "barcode", dto.BarcodeErr, dto.Barcode)
+				<button
+					type="submit"
+					hx-ext="disable-element"
+					hx-disable-element="self"
+					class="form-submit-btn m-2 px-2 min-w-24 min-h-6 lg:w-1/  bg-indigo-700 focus:bg-indigo-400  text-base font-semibold leading-6 text-white shadow-base hover:bg-indigo-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+				>
+					Submit
+				</button>
+			</form>
+		</div>
+	}
+}

@@ -1,0 +1,14 @@
+package views
+
+import "prodcat/views/layout"
+import "github.com/gin-gonic/gin"
+
+templ Fallback(c *gin.Context, comp templ.Component, fallback bool) {
+	if fallback {
+		@layout.Base(c) {
+			@comp
+    	}
+	} else {
+		@comp
+  }
+}

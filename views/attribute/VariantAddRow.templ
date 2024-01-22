@@ -1,0 +1,29 @@
+package attributeView
+
+import "strconv"
+
+templ VariantAddRow(attrId int, value string) {
+	<form
+		id="addAttributeForm"
+		hx-post={ "/attributes/" + strconv.Itoa(attrId) + "/variants" }
+		hx-swap="outerHTML transition:true"
+		hx-target="#variantNewRow">
+		<div class="grid grid-cols-12" id="variantNewRow">
+			<div class="text-sm col-span-1">-</div>
+			<div class="col-span-7">
+				<input type="hidden" name="attr_id" value={ strconv.Itoa(attrId) }/>
+				<input type="hidden" form="addAttributeForm" value={ value } name="type"/>
+				<input form="addAttributeForm" minlength="2" class="bg-transparent w-full text-blonde font-medium" value="" name="value"/>
+			</div>
+			<div class="col-span-1"></div>
+			<div class="col-span-1">
+				<button
+					form="addAttributeForm"
+					type="submit"
+					class="btn-primary-sm bg-green-700 hover:bg-green-500"
+				>Add</button>
+				<div class="col-span-1"></div>
+			</div>
+		</div>
+	</form>
+}
