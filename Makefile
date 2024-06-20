@@ -18,6 +18,9 @@ run:
 	- templ generate .\views 
 	- air .
 
+run2:
+	- templ generate --watch --proxy="http://localhost:8080" --cmd="go run ."
+
 build:
 	- tailmin
 	- templ generate .\views 
