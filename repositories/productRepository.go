@@ -67,7 +67,7 @@ func (pr *ProductRepository) CreateProduct(ctx context.Context, dto dto.ProductD
 	return product, nil
 }
 
-func (pr *ProductRepository) FindProductByID(ctx context.Context, id int, withAttrs bool) *ent.Product {
+func (pr *ProductRepository) FindProductByID(ctx context.Context, id int, withAttrs bool) (*ent.Product, error) {
 	if withAttrs {
 		return pr.db.Product.
 			Query().
@@ -80,11 +80,20 @@ func (pr *ProductRepository) FindProductByID(ctx context.Context, id int, withAt
 				q.WithVariant(func(q *ent.AttributeVariantNumQuery) { q.WithAttribute() })
 			}).
 			Where(product.IDEQ(id)).
-			OnlyX(ctx)
+			Only(ctx)
 	} else {
 		return pr.db.Product.
 			Query().
 			Where(product.IDEQ(id)).
-			OnlyX(ctx)
+			Only(ctx)
 	}
+}
+
+func (pr *ProductRepository) UpdateProductFromDTO(ctx context.Context, prodDTO *dto.ProductDTO) (*ent.Product, error) {
+	product, err := pr.FindProductByID(ctx, prodDTO.ID, true)
+	if err != nil {
+		return nil, err
+	}
+
+	return product.Update().SetBarcode(prodDTO.Barcode).Save(ctx)
 }

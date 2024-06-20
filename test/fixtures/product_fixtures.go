@@ -32,7 +32,7 @@ func ProductFixtures(ctx context.Context, db *ent.Client) {
 
 	// attrKeys, _ := ar.CreateAttribute(ctx, schema.AttrNumType, "Keys", "Number of keys")
 
-	keyboard1Restored := pr.FindProductByID(ctx, keyboard1.ID, true)
+	keyboard1Restored, _ := pr.FindProductByID(ctx, keyboard1.ID, true)
 	println(keyboard1Restored.ID)
 
 	// productDTO = repositories.ProductDTO{Name: "Mouse", Description: "Cheapest mouse"}

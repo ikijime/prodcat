@@ -75,7 +75,11 @@ func (uc ProductController) ProductPage(c *gin.Context) {
 		return
 	}
 
-	product := uc.pr.FindProductByID(c, id, true)
+	product, err := uc.pr.FindProductByID(c, id, true)
+	if err != nil {
+		c.AbortWithStatus(404)
+		return
+	}
 
 	attributeCollection := dto.NewAttributeCollection(product)
 	c.HTML(200, "", fbGuard(c, productView.Product(product, attributeCollection)))
@@ -87,22 +91,47 @@ func (uc ProductController) ProductAddPage(c *gin.Context) {
 }
 
 func (uc ProductController) ProductEditPage(c *gin.Context) {
-
 	idQuery := c.Param("id")
 	id, err := strconv.Atoi(idQuery)
 	if err != nil {
-		log.Println("can't convert")
-		c.JSON(500, gin.H{"error": err.Error()})
+		c.HTML(404, "can't convert", "")
 		return
 	}
 
-	product := uc.pr.FindProductByID(c, id, true)
+	product, err := uc.pr.FindProductByID(c, id, true)
+	if err != nil {
+		c.AbortWithStatus(404)
+		return
+	}
 
 	c.HTML(200, "", fbGuard(c, productView.ProductEdit(dto.NewProductDTO(product))))
 }
 
-func (uc ProductController) PatchProductForm(c *gin.Context) {
+// попробовать работать напрямую с обьектом?
+func (uc ProductController) PatchProductForm(ctx *gin.Context) {
+	var prodDTO dto.ProductDTO
+	err := ctx.ShouldBind(&prodDTO)
+	if err != nil {
+		ctx.JSON(200, err.Error())
+		return
+	}
 
+	validate := validator.New()
+	err = validate.Struct(&prodDTO)
+	if err != nil {
+		prodDTO.FillErrors(err)
+		ctx.HTML(http.StatusBadRequest, "", fbGuard(ctx, productView.ProductEdit(prodDTO)))
+		return
+	}
+
+	if err != nil {
+		ctx.AbortWithStatus(404)
+		return
+	}
+
+	product, _ := uc.pr.UpdateProductFromDTO(ctx, &prodDTO)
+
+	ctx.HTML(200, "", productView.ProductEdit(dto.NewProductDTO(product)))
 }
 
 func (uc ProductController) ProductAddFormParse(c *gin.Context) {
@@ -168,8 +197,8 @@ func (uc ProductController) GetProductWithAttributeValues(c *gin.Context) {
 		log.Println("can't convert")
 		return
 	}
-
-	c.JSON(200, uc.pr.FindProductByID(c, id, true))
+	product, _ := uc.pr.FindProductByID(c, id, true)
+	c.JSON(200, product)
 }
 
 func (uc ProductController) AddProduct(c *gin.Context) {
