@@ -89,11 +89,16 @@ func (pr *ProductRepository) FindProductByID(ctx context.Context, id int, withAt
 	}
 }
 
-func (pr *ProductRepository) UpdateProductFromDTO(ctx context.Context, prodDTO *dto.ProductDTO) (*ent.Product, error) {
-	product, err := pr.FindProductByID(ctx, prodDTO.ID, true)
+func (pr *ProductRepository) UpdateProduct(ctx context.Context, data *dto.ProductDTO) (*ent.Product, error) {
+	product, err := pr.FindProductByID(ctx, data.ID, true)
 	if err != nil {
 		return nil, err
 	}
 
-	return product.Update().SetBarcode(prodDTO.Barcode).Save(ctx)
+	return product.
+		Update().
+		SetBarcode(data.Barcode).
+		SetName(data.Name).
+		SetDescription(data.Description).
+		Save(ctx)
 }

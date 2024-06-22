@@ -43,12 +43,16 @@ templ Base(c *gin.Context) {
 			<link rel="stylesheet" href="/static/css/toastify.css"/>
 			<link rel="stylesheet" href="/static/css/output.css"/>
 			<link rel="stylesheet" href="/static/css/additional.css"/>
-			<script src="/static/js/htmx.js"></script>
+			<link rel="stylesheet" href="/static/css/dropzone.min.css"/>
 
+			<script src="/static/js/htmx.js"></script>
 			// DEV
 			<script src="https://cdn.tailwindcss.com"></script>
+
 			<script src="/static/js/disable-element.js"></script>
 			<script src="/static/js/utils.js"></script>
+			<script src="/static/js/dropzone.min.js"></script>
+			<script>Dropzone.autoDiscover = false;</script>
  			// <script src="/static/js/hyperscript.js"></script>
 			<script src="/static/js/toastify.js" type="application/javascript"></script>
 			<script src="/static/js/notification-system.js"></script>
@@ -69,11 +73,11 @@ templ Base(c *gin.Context) {
 				</div>
 			</main>
 
-        // SPINNER
         <div class="w-12 load-indicator items-center fixed bottom-5 left-5">
 			<img class="htmx-indicator shadow-sm" id="indicator" src="/static/assets/oval.svg"/>
 		</div>
 		@components.FieldDataSaver()
 		</body>
+
 	</html>
 }
