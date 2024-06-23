@@ -1,0 +1,62 @@
+package components
+
+templ Dropzone() {
+	<div></div>
+
+	<script type="text/javascript">
+	// document.addEventListener('htmx:afterRequest', function(evt) {
+		// console.log("request finished")
+		// Dropzone.discover()
+		// console.log("dropzone reloaded")
+	// });
+
+	var formData = new FormData();
+	dropZoneconfig = {
+		addRemoveLinks: true,
+		autoProcessQueue: false,
+		uploadMultiple: true,
+		parallelUploads: 100,
+		maxFiles: 10,
+		forceFallback: false,
+		url: "/products",
+
+		init: function() {
+			var myDropzone = this;
+
+			// First change the button to actually tell Dropzone to process the queue.
+			document.querySelector("button[type=submit]")
+			.addEventListener("click", function(e) {
+			// Make sure that the form isn't actually being sent.
+				// e.preventDefault();
+				// e.stopPropagation();
+				myDropzone.processQueue();
+			});
+
+			this.on("addedfile", function(file) { 
+				formData.append("file", file); 
+			});
+			// Listen to the sendingmultiple event. In this case, it's the sendingmultiple event instead
+			// of the sending event because uploadMultiple is set to true.
+			this.on("sendingmultiple", function() {
+			// Gets triggered when the form is actually being sent.
+			// Hide the success button or the complete form.
+			});
+			this.on("successmultiple", function(files, response) {
+			// Gets triggered when the files have successfully been sent.
+			// Redirect user or notify of success.
+				console.log("uploaded")
+				this.removeAllFiles(true);
+			});
+			this.on("errormultiple", function(files, response) {
+			// Gets triggered when there was an error sending the files.
+			// Maybe show form again, and notify user of error
+			});
+		}
+	}
+
+	if (typeof productDropZone == "undefined") {
+		let productDropZone = new Dropzone("#productDropzone", dropZoneconfig);
+	}
+
+	</script>
+}

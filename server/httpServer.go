@@ -24,6 +24,7 @@ func InitHttpServer(config *viper.Viper, db *ent.Client) HttpServer {
 	userRepo := repositories.NewUserRepository(db, authService)
 	productRepo := repositories.NewProductRepository(db)
 	// attributeRepo := repositories.NewAttributeRepository(db)
+	uploadController := controllers.NewUploadController()
 	userController := controllers.NewUsersController(userRepo, authService)
 	adminContoller := controllers.NewAdminController(userRepo, authService)
 	productController := controllers.NewProductController(productRepo, userRepo, authService)
@@ -50,6 +51,9 @@ func InitHttpServer(config *viper.Viper, db *ent.Client) HttpServer {
 	router.GET("/logout", userController.Logout)
 	router.GET("/register", userController.RegisterForm)
 	router.POST("/register", userController.Register)
+
+	// Uploads
+	router.POST("uploads", uploadController.HandleUploads)
 
 	// Products
 	router.POST("/products/search", userOnly, productController.SearchProduct)

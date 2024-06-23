@@ -1,0 +1,23 @@
+package productView
+
+import "prodcat/views/components"
+import "prodcat/dto"
+
+templ ProductAddForm(productDTO *dto.ProductDTO) {
+	<form 
+		id="product-add-form"
+		hx-encoding="multipart/form-data"
+		hx-post="/products"
+		hx-swap="outerHTML transition:true"
+		hx-target="#product-add-form"
+		hx-indicator="#indicator"
+		class="ml-4"
+	>
+		<div class="bg-gray-violet2/50">
+			@components.InputField("product_code", "code", "code", productDTO.CodeErr, productDTO.Code)
+			@components.InputField("product_barcode", "barcode", "barcode", productDTO.BarcodeErr, productDTO.Barcode)
+			@components.InputField("product_name", "name", "name", productDTO.NameErr, productDTO.Name)
+			@components.InputTextarea("product_description", "description", "description", nil)
+		</div>
+	</form>
+}

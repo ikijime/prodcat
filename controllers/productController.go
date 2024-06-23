@@ -1,10 +1,10 @@
 package controllers
 
 import (
-	"encoding/base64"
 	"io"
 	"log"
 	"net/http"
+	"os"
 	"prodcat/dto"
 	"prodcat/ent"
 	"prodcat/repositories"
@@ -75,7 +75,11 @@ func (uc ProductController) ProductPage(c *gin.Context) {
 		return
 	}
 
-	product := uc.pr.FindProductByID(c, id, true)
+	product, err := uc.pr.FindProductByID(c, id, true)
+	if err != nil {
+		c.AbortWithStatus(404)
+		return
+	}
 
 	attributeCollection := dto.NewAttributeCollection(product)
 	c.HTML(200, "", fbGuard(c, productView.Product(product, attributeCollection)))
@@ -87,51 +91,74 @@ func (uc ProductController) ProductAddPage(c *gin.Context) {
 }
 
 func (uc ProductController) ProductEditPage(c *gin.Context) {
-
 	idQuery := c.Param("id")
 	id, err := strconv.Atoi(idQuery)
 	if err != nil {
-		log.Println("can't convert")
-		c.JSON(500, gin.H{"error": err.Error()})
+		c.HTML(404, "can't convert", "")
 		return
 	}
 
-	product := uc.pr.FindProductByID(c, id, true)
+	product, err := uc.pr.FindProductByID(c, id, true)
+	if err != nil {
+		c.AbortWithStatus(404)
+		return
+	}
 
 	c.HTML(200, "", fbGuard(c, productView.ProductEdit(dto.NewProductDTO(product))))
 }
 
-func (uc ProductController) PatchProductForm(c *gin.Context) {
+func (uc ProductController) PatchProductForm(ctx *gin.Context) {
+	var prodDTO dto.ProductDTO
+	err := ctx.ShouldBind(&prodDTO)
+	if err != nil {
+		ctx.JSON(200, err.Error())
+		return
+	}
 
+	validate := validator.New()
+	err = validate.Struct(&prodDTO)
+	if err != nil {
+		prodDTO.FillErrors(err)
+		ctx.HTML(http.StatusBadRequest, "", fbGuard(ctx, productView.ProductEdit(prodDTO)))
+		return
+	}
+
+	product, _ := uc.pr.UpdateProduct(ctx, &prodDTO)
+	ctx.HTML(200, "", productView.ProductEdit(dto.NewProductDTO(product)))
 }
 
 func (uc ProductController) ProductAddFormParse(c *gin.Context) {
 	var prod dto.ProductDTO
 	c.ShouldBind(&prod)
 
-	image, err := c.FormFile("uploadimage")
-	if err != nil {
-		log.Println(err.Error())
-	} else {
-		openedFile, _ := image.Open()
-		file, _ := io.ReadAll(openedFile)
-		prod.Image.Header = image.Header.Values("Content-Type")[0]
-		prod.Image.Name = image.Filename
-		prod.Image.Body = base64.RawStdEncoding.EncodeToString(file)
+	form, err := c.MultipartForm()
+	if err == nil {
+		for _, handlers := range form.File {
+			for _, handler := range handlers {
+				dst, _ := os.Create(handler.Filename)
+				file, _ := handler.Open()
+				defer dst.Close()
+				defer file.Close()
+				if _, err := io.Copy(dst, file); err != nil {
+					c.AbortWithError(500, err)
+					return
+				}
+			}
+		}
 	}
 
 	validate := validator.New()
 	err = validate.Struct(&prod)
 	if err != nil {
 		prod.FillErrors(err)
-		c.HTML(http.StatusBadRequest, "", fbGuard(c, productView.ProductAdd(&prod)))
+		c.HTML(http.StatusBadRequest, "", fbGuard(c, productView.ProductAddForm(&prod)))
 		return
 	}
 
 	WritePopupMessage(c, "success", "added")
 	emptyProd := dto.ProductDTO{}
 	uc.pr.CreateProduct(c, prod)
-	c.HTML(http.StatusBadRequest, "", fbGuard(c, productView.ProductAdd(&emptyProd)))
+	c.HTML(http.StatusBadRequest, "", fbGuard(c, productView.ProductAddForm(&emptyProd)))
 }
 
 func (uc ProductController) SearchProduct(c *gin.Context) {
@@ -168,8 +195,8 @@ func (uc ProductController) GetProductWithAttributeValues(c *gin.Context) {
 		log.Println("can't convert")
 		return
 	}
-
-	c.JSON(200, uc.pr.FindProductByID(c, id, true))
+	product, _ := uc.pr.FindProductByID(c, id, true)
+	c.JSON(200, product)
 }
 
 func (uc ProductController) AddProduct(c *gin.Context) {

@@ -40,7 +40,7 @@ func TestCreateProductWithAttributes(t *testing.T) {
 
 	attributeRepo.CreateBoolValue(c, attrBool, false, product)
 
-	updatedProd := productRepo.FindProductByID(c, product.ID, true)
+	updatedProd, _ := productRepo.FindProductByID(c, product.ID, true)
 
 	boolAttrs := updatedProd.Edges.AttributeValuesBool
 	strAttrs := updatedProd.Edges.AttributeValuesString

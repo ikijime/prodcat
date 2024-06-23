@@ -13,15 +13,13 @@ type ProductDTO struct {
 	ID             int
 	Name           string `form:"name" json:"name" validate:"required,min=2"`
 	NameErr        error
-	Code           string `form:"code" json:"code" validate:"required,numeric,min=2"`
+	Code           string `form:"code" json:"code" validate:"required,numeric,min=1"`
 	CodeErr        error
 	Barcode        string `form:"barcode" json:"barcode" validate:"required,min=2"`
 	BarcodeErr     error
 	Description    string `form:"description" json:"description"`
 	DescriptionErr error
 	Err            error
-	ImageHeaders   string
-	Image          Image
 }
 
 func (d *ProductDTO) IsValid() bool {
