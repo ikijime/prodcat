@@ -8,25 +8,23 @@ import 	"prodcat/ent/schema"
 templ AttributeAdd(dto dto.AttributeDTO) {
 	@layout.MainMenu("add-attribute") {
 	<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-		<div class="bg-black/20 mt-4 p-8">
-			<form
-				id="addAttributeForm"
-				hx-post="/attributes"
-				hx-target="#content"
-				hx-indicator="#indicator"
-				hx-encoding="multipart/form-data">
-				@components.InputField("attribute_name","name", "name", dto.NameErr, dto.Name)
-				@components.InputRadio("attribute_type","type", dto.TypeErr, schema.AttrTypes, "", false)
-				@components.InputTextarea("attribute_description","description", dto.Description, dto.DescriptionErr)
-				<button
-					type="submit"
-					hx-ext="disable-element"
-					hx-disable-element="self"
-					class="form-submit-btn mx-8 mb-4 px-2 min-w-28 min-h-8 lg:w-1/  bg-indigo-700 focus:bg-indigo-400  text-base font-semibold leading-6 text-white shadow-base hover:bg-indigo-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-					Add
-				</button>
-			</form>
-		</div>
+		<form
+			id="addAttributeForm"
+			hx-post="/attributes"
+			hx-target="#content"
+			hx-indicator="#indicator"
+			hx-encoding="multipart/form-data">
+			@components.InputField("attribute_name","name", "name", dto.NameErr, dto.Name)
+			@components.InputRadio("attribute_type","type", dto.TypeErr, schema.AttrTypes, "", false)
+			@components.InputTextarea("attribute_description","description", dto.Description, dto.DescriptionErr)
+			<button
+				type="submit"
+				hx-ext="disable-element"
+				hx-disable-element="self"
+				class="form-submit-btn mx-8 mb-4 px-2 min-w-28 min-h-8 lg:w-1/  bg-indigo-700 focus:bg-indigo-400  text-base font-semibold leading-6 text-white shadow-base hover:bg-indigo-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+				Add
+			</button>
+		</form>
 	</div>
 	}
 }

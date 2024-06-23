@@ -20,8 +20,6 @@ type ProductDTO struct {
 	Description    string `form:"description" json:"description"`
 	DescriptionErr error
 	Err            error
-	ImageHeaders   string
-	Image          Image
 }
 
 func (d *ProductDTO) IsValid() bool {
