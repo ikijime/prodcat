@@ -35,7 +35,7 @@ func InitHttpServer(config *viper.Viper, db *ent.Client) HttpServer {
 
 	router.Use(gin.Logger())
 	router.Use(authService.ValidateUser)
-	router.HTMLRender = &TemplRender{}
+	router.HTMLRender = &HTMLTemplRenderer{}
 
 	// authorization
 	userOnly := authService.Auth("user")

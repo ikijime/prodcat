@@ -131,6 +131,14 @@ func (uc ProductController) ProductAddFormParse(c *gin.Context) {
 	var prod dto.ProductDTO
 	c.ShouldBind(&prod)
 
+	validate := validator.New()
+	err := validate.Struct(&prod)
+	if err != nil {
+		prod.FillErrors(err)
+		c.HTML(422, "", fbGuard(c, productView.ProductAddForm(&prod)))
+		return
+	}
+
 	form, err := c.MultipartForm()
 	if err == nil {
 		for _, handlers := range form.File {
@@ -147,18 +155,10 @@ func (uc ProductController) ProductAddFormParse(c *gin.Context) {
 		}
 	}
 
-	validate := validator.New()
-	err = validate.Struct(&prod)
-	if err != nil {
-		prod.FillErrors(err)
-		c.HTML(http.StatusBadRequest, "", fbGuard(c, productView.ProductAddForm(&prod)))
-		return
-	}
-
 	WritePopupMessage(c, "success", "added")
 	emptyProd := dto.ProductDTO{}
 	uc.pr.CreateProduct(c, prod)
-	c.HTML(http.StatusBadRequest, "", fbGuard(c, productView.ProductAddForm(&emptyProd)))
+	c.HTML(201, "", fbGuard(c, productView.ProductAddForm(&emptyProd)))
 }
 
 func (uc ProductController) SearchProduct(c *gin.Context) {

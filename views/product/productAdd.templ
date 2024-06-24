@@ -1,11 +1,9 @@
 package productView
 
-import "prodcat/views/components"
 import "prodcat/views/layout"
 import "prodcat/dto"
 
 templ ProductAdd(productDTO *dto.ProductDTO) {
-				// hx-swap="innerHTML transition:true"
 	@layout.MainMenu("add-product") {
 
 		@ProductAddForm(productDTO)
@@ -17,9 +15,122 @@ templ ProductAdd(productDTO *dto.ProductDTO) {
 			hx-disable-element="self"
 			class="form-submit-btn my-4 mx-8 px-2 min-w-28 min-h-8 lg:w-1/  bg-indigo-700 focus:bg-indigo-400  text-base font-semibold leading-6 text-white shadow-base hover:bg-indigo-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
 		>Submit</button>
-		<div id="productDropzone" class="dropzone"></div>
-		<div class="min-h-24 previews"></div>
-		@components.Dropzone()
+
+	<div class="mx-8">
+		<div class="hover:cursor-pointer min-h-24 h-full max-h-80 border-dashed border-slate-600 border-2 flex flex-col justify-center items-center bg-slate-900 hover:bg-slate-700" id="drop-area">
+			<p class="text-center">Drag & Drop one or more files or click to select</p>
+			<input
+			id="drop-input" 
+			name="images" 
+			hidden 
+			form="product-add-form" 
+			onchange="previewFiles(this.files)"
+			type="file" 
+			multiple
+		></div>
+		<p class="error"></p>
+		<div id="drop-preview-container" class="flex"></div>
+	</div>
+   <script>
+		const dropArea = document.querySelector("#drop-area");
+		const inputElement = document.querySelector("#drop-input");
+		dropArea.addEventListener('click', () => inputElement.click());
+
+		let previewContainer = document.querySelector("#drop-preview-container");
+		let error = document.querySelector(".error");
+		let allowedImageTypes = ["image/jpeg", "image/gif", "image/png"];
+
+		function previewFiles(files) {
+			error.style.display = "none";
+			
+			for(let file of files){
+				if(!allowedImageTypes.includes(file.type)){
+				error.style.display = "block";
+				error.setAttribute('class', 'bg-rose-900 p-1');
+				error.innerHTML = "Only .jpg, .png, .gif files are allowed";
+			
+				// Hide the error message after 5 seconds
+				setTimeout( () => {
+					error.style.display = "none";
+				}, 5000);
+			
+				// Return false to stop processing and prevent image preview
+				return false;
+				}
+			}
+		
+			for (let file of files) {
+				let reader = new FileReader();
+				reader.readAsDataURL(file);
+				reader.onload = function() {
+					let image = new Image();
+					image.src = this.result;
+					
+					// Create a container for the image
+					let imageContainer = document.createElement("div");
+					imageContainer.setAttribute('class', 'truncate p-2 w-40');
+					imageContainer.appendChild(image);
+					previewContainer.appendChild(imageContainer);
+				
+					let imageName = document.createElement("p");
+					imageName.setAttribute('class', 'truncate');
+					imageName.innerHTML = file.name;
+					imageContainer.appendChild(imageName);
+				
+					// Create a remove button with an onclick event 
+					// to remove the image
+					let removeButton = document.createElement("button");
+					removeButton.setAttribute('class', 'bg-rose-900 hover:bg-rose-500 pointer p-1');
+					removeButton.setAttribute('onclick', 'removeImage(this.parentElement)');
+					removeButton.innerText = "Remove image";
+					imageContainer.appendChild(removeButton);
+				}
+			}
+		}
+		
+		dropArea.addEventListener('dragenter', ev => {
+			dropArea.classList.add("bg-slate-700");
+			ev.preventDefault();
+		});
+		
+		dropArea.addEventListener('dragover', ev => {
+			dropArea.classList.add("bg-slate-700");
+			ev.preventDefault();
+		});
+		
+		dropArea.addEventListener('dragleave', ev => {
+			dropArea.classList.remove("bg-slate-700");
+			ev.preventDefault();
+		});
+		
+		// Add a drop event listener to handle dropped files
+		dropArea.addEventListener('drop', ev => {
+			dropArea.classList.remove("bg-slate-700");
+			ev.preventDefault();
+			
+			// Using the dataTransfer object to access the files being dragged.
+			if(ev.dataTransfer.files){
+				let transferredFiles = ev.dataTransfer.files;
+				previewFiles(transferredFiles);
+			}
+		});
+
+		function removeImage(element){
+			const imgName = element.getElementsByTagName("p")[0].firstChild.nodeValue
+			const input = document.getElementById("drop-input");
+			const fileListArr = Array.from(input.files);
+			const indexToRemove = fileListArr.findIndex(file => file.name === imgName);
+
+			if (indexToRemove !== -1) {
+				fileListArr.splice(indexToRemove, 1);
+				const newFileList = new DataTransfer();
+				fileListArr.forEach(file => newFileList.items.add(file));
+				input.files = newFileList.files;
+			}
+			element.remove();
+		}
+   </script>
+
 	}
 
 }

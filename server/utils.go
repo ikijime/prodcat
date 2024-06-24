@@ -4,34 +4,56 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/a-h/templ"
 	"github.com/gin-gonic/gin/render"
+
+	"github.com/a-h/templ"
 )
 
-type TemplRender struct {
-	Code int
-	Data templ.Component
+var Default = &HTMLTemplRenderer{}
+
+type HTMLTemplRenderer struct {
+	FallbackHtmlRenderer render.HTMLRender
 }
 
-func (t TemplRender) Render(w http.ResponseWriter) error {
-	t.WriteContentType(w)
-	w.WriteHeader(t.Code)
-	if t.Data != nil {
-		return t.Data.Render(context.Background(), w)
-	}
-	return nil
-}
-
-func (t TemplRender) WriteContentType(w http.ResponseWriter) {
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-}
-
-func (t *TemplRender) Instance(name string, data interface{}) render.Render {
-	if templData, ok := data.(templ.Component); ok {
-		return &TemplRender{
-			Code: http.StatusOK,
-			Data: templData,
+func (r *HTMLTemplRenderer) Instance(s string, d any) render.Render {
+	templData, ok := d.(templ.Component)
+	if !ok {
+		if r.FallbackHtmlRenderer != nil {
+			return r.FallbackHtmlRenderer.Instance(s, d)
 		}
 	}
+	return &Renderer{
+		Ctx:       context.Background(),
+		Status:    -1,
+		Component: templData,
+	}
+}
+
+func New(ctx context.Context, status int, component templ.Component) *Renderer {
+	return &Renderer{
+		Ctx:       ctx,
+		Status:    status,
+		Component: component,
+	}
+}
+
+type Renderer struct {
+	Ctx       context.Context
+	Status    int
+	Component templ.Component
+}
+
+func (t Renderer) Render(w http.ResponseWriter) error {
+	t.WriteContentType(w)
+	if t.Status != -1 {
+		w.WriteHeader(t.Status)
+	}
+	if t.Component != nil {
+		return t.Component.Render(t.Ctx, w)
+	}
 	return nil
+}
+
+func (t Renderer) WriteContentType(w http.ResponseWriter) {
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 }

@@ -76,6 +76,20 @@ templ Base(c *gin.Context) {
         <div class="w-12 load-indicator items-center fixed bottom-5 left-5">
 			<img class="htmx-indicator shadow-sm" id="indicator" src="/static/assets/oval.svg"/>
 		</div>
+		<script>
+			document.body.addEventListener('htmx:beforeSwap', function(evt) {
+				if(evt.detail.xhr.status === 404) {
+					console.log("Error: Could Not Find Resource");
+				} else if(evt.detail.xhr.status === 422) {
+					evt.detail.shouldSwap = true;
+					evt.detail.isError = false;
+				} else if(evt.detail.xhr.status === 201) {
+					let previews = document.getElementById("drop-preview-container");
+					if (typeof previews != 'undefined') {
+						previews.innerHTML = ""
+					}
+			}});
+		</script>
 		@components.FieldDataSaver()
 		</body>
 

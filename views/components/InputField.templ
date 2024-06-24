@@ -5,7 +5,7 @@ import "prodcat/utils"
 templ InputField(owner string, name string, placeholder string, err error, value string, ) {
 	<div id={owner + "-field"}>
 		<label for={owner} class="block text-base text-zinc-100 font-light leading-7">{utils.Capitalize(name)}</label>
-		<div class="grid grid-cols-[2%_98%]">
+		<div class="grid grid-cols-[1%_99%]">
 			<div 
 				if err != nil {
 					class="col-span-1 py-1 bg-red-700"
