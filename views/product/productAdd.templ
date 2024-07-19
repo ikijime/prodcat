@@ -16,6 +16,7 @@ templ ProductAdd(productDTO *dto.ProductDTO) {
 			class="form-submit-btn my-4 mx-8 px-2 min-w-28 min-h-8 lg:w-1/  bg-indigo-700 focus:bg-indigo-400  text-base font-semibold leading-6 text-white shadow-base hover:bg-indigo-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
 		>Submit</button>
 
+	// @todo Move to component
 	<div class="mx-8">
 		<div class="hover:cursor-pointer min-h-24 h-full max-h-80 border-dashed border-slate-600 border-2 flex flex-col justify-center items-center bg-slate-900 hover:bg-slate-700" id="drop-area">
 			<p class="text-center">Drag & Drop one or more files or click to select</p>
@@ -31,14 +32,25 @@ templ ProductAdd(productDTO *dto.ProductDTO) {
 		<p class="error"></p>
 		<div id="drop-preview-container" class="flex"></div>
 	</div>
+
+	//// Attributes ///////////
+	<div class="mx-4">
+		<br/>
+		<a hx-get="/attributes/selector" hx-swap="beforebegin">Add attribute</a>
+	</div>
    <script>
-		const dropArea = document.querySelector("#drop-area");
-		const inputElement = document.querySelector("#drop-input");
+   		let dropAreaName = "drop-area"
+		let inputName = "drop-input"
+		let previewContainerName = "drop-preview-container"
+
+		const dropArea = document.getElementById(dropAreaName);
+		const inputElement = document.getElementById(inputName);
+		const previewContainer = document.getElementById(previewContainerName);
+
 		dropArea.addEventListener('click', () => inputElement.click());
 
-		let previewContainer = document.querySelector("#drop-preview-container");
-		let error = document.querySelector(".error");
-		let allowedImageTypes = ["image/jpeg", "image/gif", "image/png"];
+		const error = document.querySelector(".error");
+		const allowedImageTypes = ["image/jpeg", "image/gif", "image/png"];
 
 		function previewFiles(files) {
 			error.style.display = "none";
@@ -117,7 +129,7 @@ templ ProductAdd(productDTO *dto.ProductDTO) {
 
 		function removeImage(element){
 			const imgName = element.getElementsByTagName("p")[0].firstChild.nodeValue
-			const input = document.getElementById("drop-input");
+			const input = document.getElementById(inputName);
 			const fileListArr = Array.from(input.files);
 			const indexToRemove = fileListArr.findIndex(file => file.name === imgName);
 
@@ -130,7 +142,5 @@ templ ProductAdd(productDTO *dto.ProductDTO) {
 			element.remove();
 		}
    </script>
-
 	}
-
 }

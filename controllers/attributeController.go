@@ -56,6 +56,11 @@ func (ac AttributeController) GetAllAttributesPage(c *gin.Context) {
 	c.HTML(200, "", fbGuard(c, attributeView.Attributes(attributes)))
 }
 
+func (ac AttributeController) GetAttributeSelectorCard(c *gin.Context) {
+
+	c.HTML(200, "", attributeView.AttributeSelector())
+}
+
 func (ac AttributeController) SearchAttributes(c *gin.Context) {
 	limit, _ := strconv.Atoi(c.Query("limit"))
 	offset, _ := strconv.Atoi(c.Query("offset"))

@@ -80,6 +80,7 @@ func InitHttpServer(config *viper.Viper, db *ent.Client) HttpServer {
 	// Attributes
 	router.GET("/attributes", attributesController.GetAllAttributesPage)
 	router.POST("/attributes/search", attributesController.SearchAttributes)
+	router.GET("/attributes/selector", attributesController.GetAttributeSelectorCard)
 	router.GET("/attributes/:id", attributesController.GetAttributePage)
 	router.GET("/attributes/:id/edit", attributesController.GetAttributeEditPage)
 	router.GET("/attributes/add", attributesController.AddAttributePage)

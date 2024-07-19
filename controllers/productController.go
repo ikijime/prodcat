@@ -143,7 +143,7 @@ func (uc ProductController) ProductAddFormParse(c *gin.Context) {
 	if err == nil {
 		for _, handlers := range form.File {
 			for _, handler := range handlers {
-				dst, _ := os.Create(handler.Filename)
+				dst, _ := os.Create("images/" + prod.Code + handler.Filename)
 				file, _ := handler.Open()
 				defer dst.Close()
 				defer file.Close()
